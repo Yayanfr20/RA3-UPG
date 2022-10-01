@@ -1,0 +1,133 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body header {
+    width: 100%;
+    height: 150px;
+    box-sizing: border-box;
+    background-color: #000000;
+}
+
+.con {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.bg-orange {
+    background-color: #F08529;
+}
+
+.bg-blue {
+    background-color: #2E3375;
+}
+
+.fs-bold {
+    font-weight: bold;
+}
+
+.carousel {
+    width: 100%;
+    height: 400px;
+}
+
+.fs-orange {
+    color: #F08529;
+}
+
+.Welcome {
+    width: 100%;
+    height: 50px;
+    background-color: #2E3375;
+    display: flex;
+    align-items: center;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.mk {
+    width: 80%;
+    height: 50px;
+    background-color: #F08529;
+    border-radius: 10px;
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+}
+
+.card {
+    color: white;
+}
+
+.card:hover {
+    box-shadow: 3px 3px 3px grey;
+}
+
+.about {
+    width: 100%;
+    background-color: #2E3375;
+    height: 400px;
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.about div {
+    color: white;
+    text-align: left;
+}
+
+.about div ul {
+    list-style: none;
+}
+
+.logo {
+    width: 300px;
+    height: 300px;
+}
+
+body footer {
+    background-color: #F08529;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 14px;
+}
+
+.profil {
+    color: white;
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+}
+
+@media  screen and (max-width:986px) {
+    .carousel {
+        height: 250px;
+    }
+    .carousel img {
+        height: 250px;
+    }
+
+    .about {
+        flex-direction: column;
+        height: auto;
+        padding: 20px;
+    }
+
+    .about .logo {
+        margin-bottom: 30px;
+    }
+}
