@@ -94,7 +94,7 @@ $allPost = query("SELECT * FROM informasi");
                                     <td><?= $i; ?></td>
                                     <td><?= $Post["judul"]; ?></td>
                                     <td>
-                                        <a href="delNews.php?id=<?= $Post['id']; ?>" onclick="return confirm('Konfirmasi!')" class="btn btn-sm mb-1 btn-danger"><i class="bi bi-trash"></i></a>
+                                        <a href="" class="btn btn-sm mb-1 btn-danger"><i class="bi bi-trash"></i></a>
                                         <a href="" class="btn btn-sm mb-1 btn-info"><i class="bi bi-eye"></i></a>
                                     </td>
                                 </tr>
@@ -137,7 +137,7 @@ $allPost = query("SELECT * FROM informasi");
     <script src="js/sb-admin-2.min.js"></script>
     <!-- link js bootstrap -->
     <script src="../js/bootstrap.bundle.min.js"></script>
-    <script src="ckeditor/ckeditor.js"></script>
+
     <!-- modal posting -->
 
     <!-- Modal -->
@@ -168,7 +168,8 @@ $allPost = query("SELECT * FROM informasi");
                         </div>
                         <div class="mb-3">
                             <div class="form-floating">
-                                <textarea class="form-control ckeditor" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px" name="Text"></textarea>
+                                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px" name="Text"></textarea>
+                                <label for="floatingTextarea2">Text Informasi</label>
                             </div>
                         </div>
 

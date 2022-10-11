@@ -47,6 +47,7 @@ $allmhs = query("SELECT * FROM absensi_mk WHERE code = '$code' ");
                     <th>No</th>
                     <th>Nama</th>
                     <th>NIM</th>
+                    <th>Kelas</th>
                     <th>Kehadiran</th>
                 </tr>
             </thead>
@@ -57,6 +58,7 @@ $allmhs = query("SELECT * FROM absensi_mk WHERE code = '$code' ");
                         <td><?= $i; ?></td>
                         <td><?= $mhs["nama"]; ?></td>
                         <td><?= $mhs['nim']; ?></td>
+                        <td><?= $mhs["kelas"]; ?></td>
                         <td><?= $mhs['kehadiran']; ?></td>
                     </tr>
                     <?php $i++; ?>

@@ -14,10 +14,13 @@ $success = "";
 $error = "";
 $author = $user["username"];
 $mk = $user['mk'];
+$author = $user["username"];
 $jmlLink = count(query("SELECT * FROM absensi WHERE mk = '$mk'"));
 $linkMK = query("SELECT * FROM absensi WHERE mk = '$mk'");
 $jmlPost = count(query("SELECT * FROM informasi WHERE author = '$author'"));
-$jmlList = count(query("SELECT * FROM list"));
+$jmlList = count(query("SELECT * FROM list WHERE author = '$author'"));
+$allTugas = count(query("SELECT * FROM tugas_mk WHERE author = '$author'"));
+$tugas = query("SELECT * FROM tugas_mk WHERE author = '$author'");
 
 // create link absen
 if (isset($_POST["Buat"])) {
@@ -51,6 +54,16 @@ if (isset($_POST["BuatList"])) {
         $error = true;
     }
 }
+
+// create tugas
+if(isset($_POST["buatTugas"])){
+    if(createTugas($_POST) > 0) {
+        $success = true;
+    }else{
+        $error = true;
+    }
+}
+
 
 
 date_default_timezone_set("Asia/Jakarta");
@@ -102,7 +115,7 @@ $waktu = date("F j, Y, g:i a");
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Buat Link Absensi</a></li>
                             <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal2">Post Informasi</a></li>
-                            <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal4">Buat Link Tugas</a></li>
+                            <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal4">Buat Link Input Tugas</a></li>
                             <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal3">Buat List</a></li>
                             <li>
                                 <hr class="dropdown-divider">
@@ -139,8 +152,8 @@ $waktu = date("F j, Y, g:i a");
             <div class="card mb-3" style="width: 16rem;">
                 <div class="card-body text-center">
                     <h5 class="card-title">Tugas</h5>
-                    <h4 class="card-title">0</h4>
-                    <a href="#" class="btn btn-primary">Buka</a>
+                    <h4 class="card-title"><?= $allTugas; ?></h4>
+                    <a href="AllTugas.php" class="btn btn-primary">Buka</a>
                 </div>
             </div>
 
@@ -248,16 +261,36 @@ $waktu = date("F j, Y, g:i a");
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Buat Link Tugas</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Buat Link Input Tugas</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <form action="" method="post">
                 <div class="modal-body">
-                    <h3 class="text-center text-secondary">Nanti Yah Belom Beres Bang Yanz nya capek Lagi Tidur!</h3>
+                    <input type="hidden" value="<?= $user['username']; ?>" name="author">
+                    <input type="hidden" value="<?= $user['mk']; ?>" name="mk">
+                    <input type="hidden" value="<?= $waktu; ?>" name="tanggal">
+                    <div class="mb-3">
+                        <label class="form-label">Buat Link Input Tugas!</label>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mata Kuliah : <?= $user['mk']; ?></label>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tanggal     : <?= $waktu; ?></label>
+                    </div>
+                     <div class="mb-3">
+                        <label class="form-label">Author      : <?= $user['username'];?></label>
+                     </div>  
+                     <div class="mb-3">
+                        <label class="form-label">Judul Tugas!</label>
+                        <input type="text" class="form-control" name="judul" required>
+                     </div>                  
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Buat</button>
+                    <button type="submit" class="btn btn-primary" name="buatTugas">Buat</button>
                 </div>
+                </form>
             </div>
         </div>
     </div>

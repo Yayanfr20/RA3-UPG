@@ -171,6 +171,7 @@ function absenMHS($data)
     $kode = htmlspecialchars($data['kode']);
     $mk = htmlspecialchars($data['mk']);
     $date = htmlspecialchars($data['tanggal']);
+    $kelas = htmlentities($data["kelas"]);
 
     $cekKode = query("SELECT * FROM absensi WHERE id = $id")[0];
 
@@ -188,7 +189,7 @@ function absenMHS($data)
             ";
             return false;
         } else {
-            $query = "INSERT INTO absensi_mk VALUES ('', '$nama', '$nim', '$mk', '$kehadiran', '$date', '$kode')";
+            $query = "INSERT INTO absensi_mk VALUES ('', '$nama', '$nim', '$mk', '$kehadiran', '$date', '$kode', '$kelas')";
 
             mysqli_query($conn, $query);
 
@@ -281,4 +282,120 @@ function ListMHS($data)
         ";
         exit;
     }
+}
+
+// create tugas
+
+function createTugas($data)
+{
+    global $conn;
+    $mk =htmlspecialchars($data["mk"]);
+    $date = htmlspecialchars($data["tanggal"]);
+    $code = uniqid();
+    $author = htmlspecialchars($data["author"]);
+    $judul = htmlspecialchars($data["judul"]);
+
+
+    $query = "INSERT INTO tugas_mk VALUES(NULL,'$mk','$date','$code','$author','$judul')";
+
+    mysqli_query($conn,$query);
+
+    return mysqli_affected_rows($conn);
+}
+
+// delete tugas
+function delTugas($id)
+{
+    global $conn;
+
+    $cek = query("SELECT * FROM tugas_mk WHERE id = $id")[0];
+    $code = $cek['code'];
+    mysqli_query($conn, "DELETE FROM tugas WHERE code = '$code'");
+
+    mysqli_query($conn, "DELETE FROM tugas_mk WHERE id = $id");
+
+    return mysqli_affected_rows($conn);
+}
+
+
+// function upload tugas
+function uploadTugas($nama,$kelas){
+    $namaFile = $_FILES['file']['name'];
+    $ukuranFile = $_FILES['file']['size'];
+    $error = $_FILES['file']['error'];
+    $tmpName = $_FILES['file']['tmp_name'];
+    
+    // cek apakah tidak ada gambar yang diupload
+    if ($error === 4) {
+        echo "<script>
+				alert('pilih file terlebih dahulu!');
+			  </script>";
+        return false;
+    }
+
+    // cek apakah yang diupload adalah gambar
+    $ekstensiGambarValid = ['pdf'];
+    $ekstensiGambar = explode('.', $namaFile);
+    $ekstensiGambar = strtolower(end($ekstensiGambar));
+    if (!in_array($ekstensiGambar, $ekstensiGambarValid)) {
+        echo "<script>
+				alert('yang anda upload bukan pdf!');
+			  </script>";
+        return false;
+    }
+
+    // lolos pengecekan, gambar siap diupload
+    // generate nama gambar baru
+    $namaFileBaru = $nama . "-" . $kelas;
+    $namaFileBaru .= '.';
+    $namaFileBaru .= $ekstensiGambar;
+
+    move_uploaded_file($tmpName, 'admin/file/' . $namaFileBaru);
+
+    return $namaFileBaru;
+}
+
+
+function inputTugas($data)
+{
+    global $conn;
+    $nama = htmlspecialchars($data["nama"]);
+    $nim = htmlspecialchars($data["nim"]);
+    $code = htmlspecialchars($data["code"]);
+    $mk = htmlspecialchars($data["mk"]);
+    $id = htmlspecialchars($data["id"]);
+    $tanggal = htmlspecialchars($data["tanggal"]);
+    $kelas = htmlspecialchars($data["kelas"]);
+    $file = uploadTugas($nama,$kelas);
+    $judul = htmlspecialchars($data["judul"]);
+    if(!$file){
+        return false;
+    }
+
+    // cek kesamaan code
+    $result = query("SELECT * FROM tugas_mk WHERE id = $id")[0];
+
+    if($code === $result["code"])
+    {
+        //cek apakah sudah pernah mengirimkan tugas
+        $cekNim = query("SELECT * FROM tugas WHERE nim = '$nim'");
+        
+        if($cekNim){
+            echo "
+            <script>
+            alert('Anda sudah mengirimkan tugas!');
+            document.location.href = 'index.php';
+            </script>
+            ";
+        }else{
+            // lulus pengecekan
+            $query = "INSERT INTO tugas VALUES(NULL,'$nama','$nim','$file','$mk','$code','$judul')";
+            mysqli_query($conn,$query);
+            return mysqli_affected_rows($conn);
+        }
+    }else{
+        return false;
+    }
+    
+
 }

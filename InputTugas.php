@@ -1,37 +1,37 @@
-<?php
+<?php 
 require 'admin/sistem/functions.php';
-$id = $_GET['id'];
-if (!$id) {
-    header("Location: error.php");
-    exit;
-}
-
-$cek = query("SELECT * FROM absensi WHERE id = $id")[0];
-
-if (!$cek) {
-    header("Location: error.php");
-    exit;
-}
 
 $succes = "";
 $error = "";
-if (isset($_POST["absen"])) {
-    if (absenMHS($_POST) > 0) {
+
+$id = $_GET["id"];
+
+if(!$id){
+    header("Location: error.php");
+}
+
+$result = query("SELECT * FROM tugas_mk WHERE id = $id")[0];
+
+if(!$result){
+    header("Location: error.php");
+}
+
+
+if(isset($_POST["upload"])){
+    if(inputTugas($_POST) > 0 ){
         $succes = true;
-    } else {
+    }else{
         $error = true;
     }
 }
 ?>
-
-
 <!doctype html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>RA3 | Absensi - <?= $cek['mk']; ?></title>
+    <title>RA3 | Upload Tugas - <?= $result["judul"]?></title>
     <!-- link css Bootstrap -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
 
@@ -55,28 +55,29 @@ if (isset($_POST["absen"])) {
     <div class="d-flex justify-content-center">
 
         <div class="mk">
-            <p>Absensi MK <?= $cek['mk']; ?> - <?= $cek['tanggal']; ?></p>
+            <p>Upload  Tugas - <?= $result["judul"]?></p>
         </div>
     </div>
     <div class="container">
-        <form action="" method="post" class="p-3 shadow">
+        <form action="" method="post" class="p-3 shadow" enctype="multipart/form-data">
             <?php if ($succes) : ?>
                 <div class="mb-3">
                     <div class="alert alert-success" role="alert">
-                        Absen Berhasil dikirim <span class="text-danger">Dimohon Untuk Tidak mengirim ulang!</span>
+                        Tugas Berhasil dikirim !
                     </div>
                 </div>
             <?php endif; ?>
             <?php if ($error) : ?>
                 <div class="mb-3" id="gagal">
                     <div class="alert alert-danger" role="alert">
-                        Absen Gagal dikirim pastikan Kode absensi Benar!
+                        Tugas Gagal dikirim pastikan Kode absensi Benar!
                     </div>
                 </div>
             <?php endif; ?>
-            <input type="hidden" name="mk" value="<?= $cek['mk']; ?>">
-            <input type="hidden" name="tanggal" value="<?= $cek['tanggal']; ?>">
-            <input type="hidden" name="id" value="<?= $cek['id']; ?>">
+            <input type="hidden" name="mk" value="<?= $result['mk']; ?>">
+            <input type="hidden" name="tanggal" value="<?= $result['date']; ?>">
+            <input type="hidden" name="id" value="<?= $result['id']; ?>">
+            <input type="hidden" name="judul" value="<?= $result['judul']; ?>">
             <div class="mb-3">
                 <label for="nama" class="form-label">Nama</label>
                 <input required type="text" id="nama" class="form-control" name="nama">
@@ -86,12 +87,9 @@ if (isset($_POST["absen"])) {
                 <input required type="number" id="NIM" class="form-control" name="nim">
             </div>
             <div class="mb-3">
-                <label for="Kehadiran" class="form-label">Kehadiran</label>
-                <select class="form-select" required aria-label="Default select example" id="Kehadiran" name="kehadiran">
-                    <option value="hadir">hadir</option>
-                    <option value="alpha">alpa</option>
-                    <option value="sakit">sakit</option>
-                </select>
+                <label class="form-label">File Tugas</label>
+                <input type="file" name="file" class="form-control">
+                <p class="form-label fs-6 text-danger">file valid pdf!</p>
             </div>
             <div class="mb-3">
                 <label for="Kelas" class="form-label">Kelas</label>
@@ -101,11 +99,12 @@ if (isset($_POST["absen"])) {
                 </select>
             </div>
             <div class="mb-3">
-                <label for="kode" class="form-label">Kode Absen</label>
-                <input required type="text" id="kode" class="form-control" name="kode">
+                <label for="kode" class="form-label">Kode Akses</label>
+                <input required type="text" id="kode" class="form-control" name="code">
+                <p class="text-success fs-6">Untuk kode akses japri km Mata kuliah!</p>
             </div>
             <div class="mb-3">
-                <button class="btn bg-orange text-white form-control" type="submit" name="absen">Kirim</button>
+                <button class="btn bg-orange text-white form-control" type="submit" name="upload">Kirim</button>
             </div>
         </form>
     </div>
